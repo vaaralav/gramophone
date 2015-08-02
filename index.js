@@ -55,7 +55,7 @@ exports.extract = function(text, options){
     stopWords = require('./stopwords/stopwords.' + options.lang + '.json');
   }
   else if (options.lang == 'all') {
-    var stopWords = [];
+    stopWords = [];
     exports.languages.forEach(function (lang) {
       stopWords = stopWords.concat(require('./stopwords/stopwords.' + lang + '.json'))
     });
