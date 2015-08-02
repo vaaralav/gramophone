@@ -120,7 +120,9 @@ Returns `['foo', 'bar']`.
 
 Use stopwords for a language other than English. Supported values are:
 
+```
 ar, bg, cs, da, de, en, es, fi, fr, gr, it, jp, lv, nl, no, pl, pt, ru, sk, sv, tr
+```
 
 #### Option: startWords
 
