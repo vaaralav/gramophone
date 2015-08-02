@@ -120,3 +120,10 @@ test('accented characters', function (t){
   t.deepEqual(k.extract(text, options), ['lörem', 'ipsüm']);
   t.end();
 });
+
+test('basic Spanish', function (t){
+  var text = 'No nos etiquetéis solo porque nos traiga sin cuidado qué nacionalidad nos adjudica el documento de identidad. Ni porque cuando suena un himno nacional, cualquiera que este sea, la mano no se nos dispare automáticamente hacia el pecho en alarde de amor patrio. Ni porque el flamear de las enseñas, que a vosotros tanto os conmueve, a nosotros nos deje indiferentes.';
+  var options = {lang: 'es', min: 1, limit: 2, ngrams: [1,2]};
+  t.deepEqual(k.extract(text, options), ['os conmueve', 'amor patrio']);
+  t.end();
+})

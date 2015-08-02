@@ -6,6 +6,11 @@ var es = require('event-stream');
 var Stream = require('stream');
 var stripTags = require('underscore.string').stripTags;
 
+// Stop word languages we support
+exports.languages = ['ar', 'bg', 'cs', 'da', 'de', 'en', 'es', 'fi', 'fr',
+                     'gr', 'it', 'jp', 'lv', 'nl', 'no', 'pl', 'pt', 'ru',
+                     'sk', 'sv', 'tr'];
+
 // Extract the most frequently used phrases from the text.
 exports.extract = function(text, options){
   var results = [];
@@ -30,7 +35,7 @@ exports.extract = function(text, options){
 
   if (!text) return [];
   if (typeof text !== 'string') text = text.toString();
-  
+
   if (!options) options = {};
   if (!options.ngrams){
     options.ngrams = [1, 2, 3];
@@ -38,11 +43,19 @@ exports.extract = function(text, options){
     options.ngrams = [options.ngrams];
   }
   if (!options.cutoff) options.cutoff = 0.5;
-  if (!options.min) options.min = 2; 
+  if (!options.min) options.min = 2;
   if (!options.stopWords) options.stopWords = [];
   if (!options.startWords) options.startWords = [];
   if (options.html){
     text = stripTags(text);
+  }
+
+  // Language specific stop words
+  if (exports.languages.indexOf(options.lang) !== -1) {
+    stopWords = require('./stopwords/stopwords.' + options.lang + '.json');
+  }
+  else {
+    stopWords = require('./stopwords/stopwords.en.json');
   }
 
   // For each ngram, extract the most frequent phrases (taking into account
@@ -71,18 +84,18 @@ exports.extract = function(text, options){
   _.each(results, function(result){
     combinedResults[result.term] = result.tf;
   });
-  
+
   // Combine results from each ngram to remove redundancy phrases
   combined = exports.combine(combinedResults, options.cutoff);
-  
+
   // Convert to a list of objects sorted by tf (term frequency)
-  combined = _.chain(combined) 
+  combined = _.chain(combined)
     .pairs()
     .sortBy(_.last)
     .reverse()
     .map(function(combination){ return {term: combination[0], tf: combination[1] }; })
     .value();
-  
+
   // Only return results over a given frequency (default is 2 or more)
   if (options.min){
     combined = _.select(combined, function(result){
@@ -114,7 +127,7 @@ exports.extract = function(text, options){
     combined =  options.score ? combined : _.pluck(combined, 'term');
   }
 
-  
+
   // Limit the results
   if (options.limit){
     combined = combined.slice(0, options.limit);
@@ -123,7 +136,7 @@ exports.extract = function(text, options){
   return combined;
 };
 
-// Text stream. Reads a text stream and emits keywords. Warning: this stream 
+// Text stream. Reads a text stream and emits keywords. Warning: this stream
 // behaves like a sink and will buffer all data until the source emits end.
 exports.stream = function(options){
   return new exports.TextStream(options);
@@ -168,7 +181,7 @@ exports.transformStream = function(options){
       this.emit('data', keywords);
     }
   });
-  
+
 };
 
 // Attempt to combine the results for different ngrams in order to work out
@@ -227,9 +240,8 @@ function blacklisted(term, extraStopWords){
 }
 
 function usePhrase(phrase, options){
-  return whitelisted(phrase, options.startWords) || 
+  return whitelisted(phrase, options.startWords) ||
     !_.detect(phrase.split(' '), function(term){
       return blacklisted(term, options.stopWords);
     });
 }
-
