@@ -124,6 +124,10 @@ Use stopwords for a language other than English. Supported values are:
 ar, bg, cs, da, de, en, es, fi, fr, gr, it, jp, lv, nl, no, pl, pt, ru, sk, sv, tr
 ```
 
+You can also use the language keyword `all` when you do not know the language in
+advance. This uses all of the stopwords for all of the languages and so might
+have unexpected effects in some circumstances.
+
 #### Option: startWords
 
 Any words in this list are whitelisted even if they are a stop word.

@@ -54,6 +54,12 @@ exports.extract = function(text, options){
   if (exports.languages.indexOf(options.lang) !== -1) {
     stopWords = require('./stopwords/stopwords.' + options.lang + '.json');
   }
+  else if (options.lang == 'all') {
+    var stopWords = [];
+    exports.languages.forEach(function (lang) {
+      stopWords = stopWords.concat(require('./stopwords/stopwords.' + lang + '.json'))
+    });
+  }
   else {
     stopWords = require('./stopwords/stopwords.en.json');
   }
