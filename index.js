@@ -70,7 +70,7 @@ exports.extract = function(text, options){
     var keywordsForNgram;
     var tf = new Tf();
     if (options.alternativeTokenizer) {
-      natural.NGrams.setTokenizer(new natural.RegexpTokenizer({pattern: /\b[^\s]+\b/g, gaps: false}));
+      natural.NGrams.setTokenizer(new natural.RegexpTokenizer({pattern: /[^(\s]+[^\s\.!?,:;)]+(:\))?|\w/g, gaps: false}));
     }
     var tokenized = _.map(natural.NGrams.ngrams(text, ngram), function(ngram){
       if (options.stem){
