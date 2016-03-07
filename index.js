@@ -73,7 +73,7 @@ exports.extract = function(text, options){
       natural.NGrams.setTokenizer(new natural.RegexpTokenizer({pattern: /\b[^\s]+\b/g, gaps: false}));
     }
     else if (options.alternativeTokenizer) {
-      natural.NGrams.setTokenizer(new natural.RegexpTokenizer({pattern: options.alternativeTokenizer, gaps: false}));
+      natural.NGrams.setTokenizer(new natural.RegexpTokenizer({pattern: new RegExp(options.alternativeTokenizer.source, "g"), gaps: false}));
     }
     var tokenized = _.map(natural.NGrams.ngrams(text, ngram), function(ngram){
       if (options.stem){

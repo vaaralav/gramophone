@@ -123,7 +123,7 @@ test('accented characters', function (t){
 
 test('accented characters w/ custom tokenizer', function(t){
   var text = 'Hallo Welt! Das ist ein Text über ganz viele Umlaute wie äöüÄÖÜß. Lörem Ipsüm Lörem Ipsüm. Lämmin kesä. Lämmin kesä.';
-  var options = {ngrams: 1, alternativeTokenizer: /[^(\s]([^\s]*[^?!:;,\.)\s])+|[\wå-öÅ-Ö]/g};
+  var options = {ngrams: 1, alternativeTokenizer: /[^(\s]([^\s]*[^?!:;,\.)\s])+|[\wå-öÅ-Ö]/};
   t.deepEqual(k.extract(text, options), ['lämmin', 'ipsüm', 'lörem', 'kesä']);
   t.end();
 });

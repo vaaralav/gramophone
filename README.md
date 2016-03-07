@@ -178,6 +178,8 @@ It also breaks up accented words, using the accented character as the separator.
 Setting `alternativeTokenizer` to `true` uses a more generous regular expression
 that respects these characters.
 
+If you wish to use your own regular expression, you can set `alternativeTokenizer` to regular expression eg. `/\b[^s]+\b/` to tokenize as you like.
+
 ```js
 keyword.extract('Lörem Ipsüm Lörem Ipsüm.', {alternativeTokenizer: true})
 ```
